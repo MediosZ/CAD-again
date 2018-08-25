@@ -166,6 +166,31 @@ void ModelerUserInterface::cb_OpenPos(Fl_Menu_* o, void* v) {
 	((ModelerUserInterface*)(o->parent()->user_data()))->cb_OpenPos_i(o,v);
 }
 
+inline void ModelerUserInterface::cb_OpenModel_i(Fl_Menu_*, void*) {
+	char *filename = NULL;
+	filename = fl_file_chooser("Open .ply File", "*.ply", NULL);
+	//std::cout << filename << std::endl;
+	if (filename)
+	{
+		delete ModelerApplication::Instance()->p;
+		ModelerApplication::Instance()->p = new PLYFile(filename);
+
+		//bool succ = ModelerApplication::Instance()->p->PLYLoad(filename);
+		//if (succ) {
+		m_modelerView->redraw();
+		std::cout << "success" << std::endl;
+		//}
+		//else {
+		//	std::cout << "load error" << std::endl;
+		//}
+
+	};
+}
+void ModelerUserInterface::cb_OpenModel(Fl_Menu_* o, void* v) {
+	((ModelerUserInterface*)(o->parent()->user_data()))->cb_OpenModel_i(o, v);
+}
+
+
 inline void ModelerUserInterface::cb_Exit_i(Fl_Menu_*, void*) {
   m_controlsWindow->hide();
 m_modelerWindow->hide();
@@ -246,6 +271,13 @@ void ModelerUserInterface::cb_m_controlsAnimOnMenu(Fl_Menu_* o, void* v) {
   ((ModelerUserInterface*)(o->parent()->user_data()))->cb_m_controlsAnimOnMenu_i(o,v);
 }
 
+inline void ModelerUserInterface::cb_m_controlsModelOnMenu_i(Fl_Menu_*, void*) {
+	ModelerApplication::Instance()->m_show_ply_model = (m_controlsModelOnMenu->value() == 0) ? false : true;
+}
+void ModelerUserInterface::cb_m_controlsModelOnMenu(Fl_Menu_* o, void* v) {
+	((ModelerUserInterface*)(o->parent()->user_data()))->cb_m_controlsModelOnMenu_i(o, v);
+}
+
 Fl_Menu_Item ModelerUserInterface::menu_m_controlsMenuBar[] = {
  {"File", 0,  0, 0, 64, 0, 0, 14, 0},
  {"Save Raytracer File", 0,  (Fl_Callback*)ModelerUserInterface::cb_Save, 0, 0, 0, 0, 14, 0},
@@ -266,11 +298,14 @@ Fl_Menu_Item ModelerUserInterface::menu_m_controlsMenuBar[] = {
  {0},
  {"Animate", 0,  0, 0, 64, 0, 0, 14, 0},
  {"Enable", 0,  (Fl_Callback*)ModelerUserInterface::cb_m_controlsAnimOnMenu, 0, 2, 0, 0, 14, 0},
+ {"ShowModel", 0,  (Fl_Callback*)ModelerUserInterface::cb_m_controlsModelOnMenu, 0, 2, 0, 0, 14, 0 },
  {0},
+ { "Load Model File", 0, (Fl_Callback*)ModelerUserInterface::cb_OpenModel, 0, 128, 0, 0, 14, 0 },
  {0}
 };
 // 11-01-2001: fixed bug that caused animation problems
 Fl_Menu_Item* ModelerUserInterface::m_controlsAnimOnMenu = ModelerUserInterface::menu_m_controlsMenuBar + 18;
+Fl_Menu_Item* ModelerUserInterface::m_controlsModelOnMenu = ModelerUserInterface::menu_m_controlsMenuBar + 19;
 
 inline void ModelerUserInterface::cb_m_controlsBrowser_i(Fl_Browser*, void*) {
   for (int i=0; i<ModelerApplication::Instance()->m_numControls; i++) {

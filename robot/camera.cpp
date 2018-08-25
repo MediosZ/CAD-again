@@ -106,7 +106,7 @@ Camera::Camera()
 	mElevation = 0.2f;
 	mAzimuth = (float)M_PI;
 
-	mLookAt = Vec3f( 0, 0, 12 );
+	mLookAt = Vec3f( 2.5, 8, 5 );
 	mCurrentMouseAction = kActionNone;
 
 	calculateViewingTransformParameters();

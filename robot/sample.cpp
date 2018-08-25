@@ -5,7 +5,9 @@
 #include "modelerdraw.h"
 #include <FL/gl.h>
 #include <fl/glut.h>
+#include <FL/Fl.H>
 #include "modelerglobals.h"
+#include "loader.h"
 
 
 #define SOLID 1
@@ -21,7 +23,8 @@ class SampleModel : public ModelerView
 {
 public:
     SampleModel(int x, int y, int w, int h, char *label) 
-        : ModelerView(x,y,w,h,label) { }
+        : ModelerView(x,y,w,h,label) { 
+	}
 
     virtual void draw();
 };
@@ -77,6 +80,101 @@ void drawSkewed(double l, double w, double h, double x, double y, double z, int 
 	glPopMatrix();
 }
 
+
+float Animate(float& curr) {
+	float state;
+	if (ModelerApplication::Instance()->direction) {
+		state = ++curr;
+		if (state >= 40) {
+			ModelerApplication::Instance()->direction = false;
+		}
+	}
+	else {
+		state = --curr;
+		if (state <= -40) {
+			ModelerApplication::Instance()->direction = true;
+		}
+	}
+	return state;
+}
+
+void drawSelf() {
+	//身体
+	setDiffuseColor(1,1,1);
+	//glTranslatef(0, 0, 0);
+	//drawSkewed(5, 10, 5, 0, 0, 0, SOLID);
+	float state = 0;
+	if (ModelerApplication::Instance()->m_animating) {
+		//std::cout << "hello it is animating" << std::endl;
+		state = Animate(ModelerApplication::Instance()->state);
+		//std::cout << state << std::endl;
+	}
+	else{
+		state = VAL(ROTATE);
+	}
+
+	
+	glRotatef(state / 2, 0, 1, 0);
+	drawBox(8, 10, 5);
+	//头
+	glPushMatrix();
+		setDiffuseColor(COLOR_RED);
+		glTranslatef(4, 13.0, 2.5);
+		drawBall(3, 0, 0, 0, SOLID);
+	glPopMatrix();
+
+	//arm
+	glPushMatrix();
+		setDiffuseColor(COLOR_BLUE);
+		glTranslatef(8.0, 9.0, 0.5);
+		glRotatef(state, 1, 0, 0);
+		glRotatef(VAL(ACT), 0, 0, 1);
+		drawBox(2, -5, 4);
+		glPushMatrix();
+			glTranslatef(0, -5, 0);
+			glRotated(35, -1, 0, 0);
+			glRotatef(VAL(ACT)/1, 0, 0, 1);
+			drawBox(2, -5, 4);
+		glPopMatrix();
+	glPopMatrix();
+	glPushMatrix();
+		setDiffuseColor(COLOR_BLUE);
+		glTranslatef(-2.0, 9.0, 0.5);
+		glRotatef(state, -1, 0, 0);
+		drawBox(2, -5, 4);
+		glPushMatrix();
+			glTranslatef(0, -5, 0);
+			glRotated(35, -1, 0, 0);
+			drawBox(2, -5, 4);
+		glPopMatrix();
+	glPopMatrix();
+
+	//leg
+	glPushMatrix();
+		setDiffuseColor(COLOR_BLUE);
+		glTranslatef(6, 0, 0.5);
+		glRotatef(state, -1, 0, 0);
+		drawBox(2, -6, 4);
+		glPushMatrix();
+			glTranslatef(0, -5, 0);
+			glRotated(15, 1, 0, 0);
+			drawBox(2, -6, 4);
+		glPopMatrix();
+	glPopMatrix();
+	glPushMatrix();
+		setDiffuseColor(COLOR_BLUE);
+		glTranslatef(0, 0, 0.5);
+		glRotatef(state, 1, 0, 0);
+		drawBox(2, -6, 4);
+		glPushMatrix();
+			glTranslatef(0, -5, 0);
+			glRotated(15, 1, 0, 0);
+			drawBox(2, -6, 4);
+		glPopMatrix();
+	glPopMatrix();
+
+}
+
 // We are going to override (is that the right word?) the draw()
 // method of ModelerView to draw out SampleModel
 void SampleModel::draw()
@@ -85,76 +183,21 @@ void SampleModel::draw()
     // matrix stuff.  Unless you want to fudge directly with the 
 	// projection matrix, don't bother with this ...
     ModelerView::draw();
-	/*
-	// draw the floor
-	setAmbientColor(.1f,.1f,.1f);
-	setDiffuseColor(COLOR_RED);
-	glPushMatrix();
-	glTranslated(-5,0,-5);
-	drawBox(10,0.01f,10);
-	glPopMatrix();
+	//std::cout << Fl::event_text() << std::endl;
 
-	// draw the sample model
-	setAmbientColor(.1f,.1f,.1f);
-	setDiffuseColor(COLOR_GREEN);*/
 	glPushMatrix();
 	glTranslated(VAL(XPOS), VAL(YPOS), VAL(ZPOS));
-	
-	/*
-	glPushMatrix();
-	glTranslated(-1.5, 0, -2);
-	glScaled(3, 1, 4);
-	drawBox(1,1,1);
-	glPopMatrix();
-	*/
-	glPushMatrix();
-	glRotated(spinX, 0, 1, 0);
-	glRotated(spinY, 1, 0, 0);
-	glTranslated(0, 0, des);
-	//头
-	setDiffuseColor(COLOR_RED);
-	drawBall(1.5, 0, 0.5, 0, SOLID);
-	//
-	setDiffuseColor(COLOR_BLUE);
-	drawSkewed(5, 4.4, 4, 0, -0.75, 0, SOLID);
-	//肩膀
-	setDiffuseColor(1.0,0.5,0.2);
-	drawHalfBall(1, 3.5, -2.1, 0, SOLID);
-	drawHalfBall(1, -3.5, -2.1, 0, SOLID);
-	//胳膊
-	setDiffuseColor(1, 1, 1);
-	drawSkewed(1, 3.2, 2, 3.5, -1.2, 0, SOLID);
-	drawSkewed(1, 3.2, 2, -3.5, -1.2, 0, SOLID);
-	//手
-	setDiffuseColor(0, 0.5, 0.3);
-	drawBall(0.8, 3.5, -6, 0, SOLID);
-	drawBall(0.8, -3.5, -6, 0, SOLID);
-	//腿
-	setDiffuseColor(1,1,1);
-	drawSkewed(1.2, 3, 2, 1, -2.4, 0, SOLID);
-	drawSkewed(1.2, 3, 2, -1, -2.4, 0, SOLID);
-	//脚
-	setDiffuseColor(0,0.5,0.3);
-	drawSkewed(1.5, 1, 3, 0.9, -9.2, 0, SOLID);
-	drawSkewed(1.5, 1, 3, -0.9, -9.2, 0, SOLID);
-	glPopMatrix();
-
-		// draw cannon
-		//glPushMatrix();
-		//glRotated(VAL(ROTATE), 0.0, 1.0, 0.0);
-		//glRotated(-90, 1.0, 0.0, 0.0);
-		//drawCylinder(VAL(HEIGHT), 0.1, 0.1);
-
-		//glTranslated(0.0, 0.0, VAL(HEIGHT));
-		//drawCylinder(1, 1.0, 0.9);
-
-		//glTranslated(0.0, 0.0, 0.5);
-		//glRotated(90, 1.0, 0.0, 0.0);
-		//drawCylinder(4, 0.1, 0.2);
-		//glPopMatrix();
+	if (!ModelerApplication::Instance()->m_show_ply_model) {
+		drawSelf();
+	}
+	else {
+		//ModelerApplication::Instance()->p->PLYdisplay();
+		ModelerApplication::Instance()->p->PLYdisplay();
+	}
 
 	glPopMatrix();
 }
+
 
 int main()
 {
@@ -165,8 +208,8 @@ int main()
     controls[XPOS] = ModelerControl("X Position", -5, 5, 0.1f, 0);
     controls[YPOS] = ModelerControl("Y Position", 0, 5, 0.1f, 2);
     controls[ZPOS] = ModelerControl("Z Position", -10, 5, 0.1f, 0);
-    controls[HEIGHT] = ModelerControl("Height", 1, 2.5, 0.1f, 1);
-	controls[ROTATE] = ModelerControl("Rotate", -135, 135, 1, 0);
+    controls[ACT] = ModelerControl("Act", 0, 25, 1.0f, 0);
+	controls[ROTATE] = ModelerControl("Rotate", -40, 40, 1, 0);
 	controls[SOME] = ModelerControl("SOME", 0, 10, 1, 0);
 
     ModelerApplication::Instance()->Init(&createSampleModel, controls, NUMCONTROLS);

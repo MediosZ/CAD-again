@@ -63,6 +63,11 @@ void ModelerApplication::Init(ModelerViewCreator_f createView,
     int i;
 
 	m_animating   = false;
+	m_show_ply_model = false;
+	direction = true;
+	state = 0;
+	p = new PLYFile("sample_mesh.ply");
+	p->print();
 	m_numControls = numControls;
 
     // ********************************************************

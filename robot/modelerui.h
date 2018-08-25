@@ -36,6 +36,8 @@ private:
   static void cb_SavePos(Fl_Menu_*, void*);
   inline void cb_OpenPos_i(Fl_Menu_*, void*);
   static void cb_OpenPos(Fl_Menu_*, void*);
+  inline void cb_OpenModel_i(Fl_Menu_*, void*);
+  static void cb_OpenModel(Fl_Menu_*, void*);
 
   inline void cb_Exit_i(Fl_Menu_*, void*);
   static void cb_Exit(Fl_Menu_*, void*);
@@ -58,9 +60,12 @@ private:
   static void cb_Focus(Fl_Menu_*, void*);
 public:
   static Fl_Menu_Item *m_controlsAnimOnMenu;
+  static Fl_Menu_Item *m_controlsModelOnMenu;
 private:
   inline void cb_m_controlsAnimOnMenu_i(Fl_Menu_*, void*);
   static void cb_m_controlsAnimOnMenu(Fl_Menu_*, void*);
+  inline void cb_m_controlsModelOnMenu_i(Fl_Menu_*, void*);
+  static void cb_m_controlsModelOnMenu(Fl_Menu_*, void*);
 public:
   Fl_Browser *m_controlsBrowser;
 private:

@@ -6,6 +6,7 @@
 #define MODELERAPP_H
 
 #include "modelerview.h"
+#include "loader.h"
 
 struct ModelerControl
 {
@@ -74,9 +75,13 @@ private:
 
     static void SliderCallback(Fl_Slider *, void*);
 	static void RedrawLoop(void*);
-
+public:
 	// Just a flag for updates
 	bool m_animating;
+	bool m_show_ply_model;
+	bool direction;
+	float state;
+	PLYFile *p;
 };
 
 #endif
