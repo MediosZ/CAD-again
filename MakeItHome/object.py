@@ -8,6 +8,10 @@ class Object:
         self.pos = pos 
         self.dir = dir/180*pi
         self.point = []
+        self.length = 0
+        self.acc_lenth = 0
+        self.acc_pos = (0,0)
+        #self.theta0 = 0
         print(self.name, 'initialization done')
         self.calPos()
         self.draw(img)
@@ -22,13 +26,19 @@ class Object:
                 (int(self.pos[0] + (self.size[1]/2)*sin(self.dir)), 
                 int(self.pos[1] - (self.size[1]/2)*cos(self.dir))), 
                 (0,0,255), 2)
+        cv2.circle(image, self.acc_pos, 25, (0,255,0))
         cv2.putText(image,self.name,self.pos, cv2.FONT_HERSHEY_SIMPLEX, 0.4,(255,0,0),1,cv2.LINE_AA)
 
     def calPos(self):
         theta0 = atan2(self.size[0], self.size[1])
-        self.theta0 = theta0
-        length = sqrt((self.size[0]/2)**2 + (self.size[1]/2)**2)
+        #self.theta0 = theta0
+        length = sqrt((self.size[0]/2)**2 + (self.size[1]/2)**2) # w/2, h/2
+        acc_lenth = sqrt((self.size[0]/2)**2 + (50/2)**2) # w/2, 50/2 
+        self.length = length
+        self.acc_lenth = acc_lenth
+        self.acc_pos = (int(self.pos[0] + (self.size[1]/2 + 50/2)*sin(self.dir)), int(self.pos[1] - (self.size[1]/2 + 50/2)*cos(self.dir)))
         #print(length)
+        self.point.clear()
         self.point.append((int(self.pos[0] + length * sin(theta0 - self.dir)), int(self.pos[1] + length * cos(theta0 - self.dir))))
         self.point.append((int(self.pos[0] - length * sin(theta0 + self.dir)), int(self.pos[1] + length * cos(theta0 + self.dir))))
         self.point.append((int(self.pos[0] - length * sin(theta0 - self.dir)), int(self.pos[1] - length * cos(theta0 - self.dir))))
