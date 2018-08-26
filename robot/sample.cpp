@@ -119,8 +119,8 @@ void drawSelf() {
 	//ͷ
 	glPushMatrix();
 		setDiffuseColor(COLOR_RED);
-		glTranslatef(4, 13.0, 2.5);
-		drawBall(3, 0, 0, 0, SOLID);
+		glTranslatef(4, 9.0+VAL(SOME), 2.5);
+		drawBall(VAL(SOME), 0, 0, 0, SOLID);
 	glPopMatrix();
 
 	//arm
@@ -210,7 +210,7 @@ int main()
     controls[ZPOS] = ModelerControl("Z Position", -10, 5, 0.1f, 0);
     controls[ACT] = ModelerControl("Act", 0, 25, 1.0f, 0);
 	controls[ROTATE] = ModelerControl("Rotate", -40, 40, 1, 0);
-	controls[SOME] = ModelerControl("SOME", 0, 10, 1, 0);
+	controls[SOME] = ModelerControl("SOME", 3, 6, 0.1f, 3);
 
     ModelerApplication::Instance()->Init(&createSampleModel, controls, NUMCONTROLS);
     return ModelerApplication::Instance()->Run();

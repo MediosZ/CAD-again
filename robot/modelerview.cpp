@@ -84,12 +84,20 @@ void ModelerView::draw()
 {
     if (!valid())
     {
-        glShadeModel( GL_SMOOTH );
-        glEnable( GL_DEPTH_TEST );
-        glEnable( GL_LIGHTING );
-		glEnable( GL_LIGHT0 );
-        glEnable( GL_LIGHT1 );
-		glEnable( GL_NORMALIZE );
+  //      glShadeModel( GL_SMOOTH );
+  //      glEnable( GL_DEPTH_TEST );
+  //      glEnable( GL_LIGHTING );
+		//glEnable( GL_LIGHT0 );
+  //      glEnable( GL_LIGHT1 );
+		glEnable(GL_DEPTH_TEST);
+		glShadeModel(GL_SMOOTH);
+		glEnable(GL_AUTO_NORMAL);
+		glEnable(GL_NORMALIZE);
+		//glEnable(GL_CULL_FACE);
+		glEnable(GL_LIGHTING);
+		glEnable(GL_LIGHT0);
+		glEnable(GL_LIGHT1);
+		glEnable(GL_LIGHT2);
     }
 
   	glViewport( 0, 0, w(), h() );
