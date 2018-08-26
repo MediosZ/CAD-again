@@ -2,9 +2,9 @@ import cv2
 import numpy as np 
 from utils import *
 from object import Object
-from costfunc import CostFunction
-
+from costfunc import CostFunction, update
 background = np.ones((520, 680, 3))
+
 objects = []
 # draw walls
 drawWall(background, 3)
@@ -27,3 +27,6 @@ CostFunction(objects)
 
 #for obj in objects:
 #    print('the {} position is {}, direction is {}'.format(obj.name, obj.pos, obj.dir))
+
+update(objects, 1000)
+redraw(background, objects)
