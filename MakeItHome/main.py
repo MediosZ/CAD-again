@@ -28,5 +28,6 @@ CostFunction(objects)
 #for obj in objects:
 #    print('the {} position is {}, direction is {}'.format(obj.name, obj.pos, obj.dir))
 
-updateWithSA(objects, 2000)
-redraw(background, objects)
+updateWithSA(objects, 1000, background)
+print("optimization is finished")
+cv2.waitKey()

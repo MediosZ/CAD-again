@@ -20,7 +20,7 @@ def redraw(img, objects):
         obj.calPos()
         obj.draw(img)
     cv2.imshow("background", img)
-    cv2.waitKey()
+    cv2.waitKey(1)
 
 # is a point is out of boundary then return True
 def pointOut(pos):

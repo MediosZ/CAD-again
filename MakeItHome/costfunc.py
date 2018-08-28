@@ -1,4 +1,4 @@
-from utils import distance
+from utils import distance, redraw
 import math
 import random
 
@@ -51,7 +51,7 @@ def CostFunction(objects):
     #pair_distance_cost = abs(objects[0].pos[1] - objects[3].pos[1] - 200) + abs(objects[0].pos[0] - objects[3].pos[0])
     #print("pair_distance_cost is ", pair_distance_cost)
 
-    final_cost = visibility_cost + accessibility_cost + direction_cost + distance_cost + pair_direction_cost + pair_distance_cost
+    final_cost = visibility_cost + accessibility_cost + 10 * direction_cost + distance_cost + pair_direction_cost + pair_distance_cost
     #print("final cost is ", final_cost)
     return final_cost
 
@@ -93,7 +93,7 @@ def update(objects, times):
         # randomly change a little bit
 
 
-def updateWithSA(objects, times):
+def updateWithSA(objects, times, image):
     temp = []
     for time in range(times):
         temper = float(times) /10 / float(time+1)
@@ -124,6 +124,7 @@ def updateWithSA(objects, times):
         print("result is ", last_cost, current_cost)
         if current_cost < last_cost:
             print("good next one")
+            redraw(image, objects)
             continue
         else:
             print("bad one")
@@ -137,9 +138,11 @@ def updateWithSA(objects, times):
             if choice <accept_prob:
                 print("prob is ", accept_prob, temper, energy)
                 print("but accept it")
+                redraw(image, objects)
                 continue
             for i, obj in enumerate(objects):
                 obj.pos = temp[i][0]
                 obj.dir = temp[i][1]
             #print("it be", CostFunction(objects), last_cost)
+            redraw(image, objects)
             continue
