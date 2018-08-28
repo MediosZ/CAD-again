@@ -1,5 +1,6 @@
 from math import * 
 import cv2
+from utils import pointOut
 
 class Object:
     def __init__(self, name, size, pos, dir, img):
@@ -44,3 +45,9 @@ class Object:
         self.point.append((int(self.pos[0] - length * sin(theta0 - self.dir)), int(self.pos[1] - length * cos(theta0 - self.dir))))
         self.point.append((int(self.pos[0] + length * sin(theta0 + self.dir)), int(self.pos[1] - length * cos(theta0 + self.dir))))
         #print(self.point)
+
+    def isOut(self):
+        for point in self.point:
+            if pointOut(point):
+                return True
+        return False

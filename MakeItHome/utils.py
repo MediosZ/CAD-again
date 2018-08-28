@@ -21,3 +21,11 @@ def redraw(img, objects):
         obj.draw(img)
     cv2.imshow("background", img)
     cv2.waitKey()
+
+# is a point is out of boundary then return True
+def pointOut(pos):
+    if pos[0] < 20 or pos[0] > 660:
+        return True
+    if pos[1] < 20 or pos[1] >500:
+        return True
+    return False

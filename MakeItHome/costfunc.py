@@ -48,6 +48,7 @@ def CostFunction(objects):
     pair_direction_cost = abs((objects[0].dir - objects[3].dir) - math.pi)
     #print("pair_direction_cost is ", pair_direction_cost)
     pair_distance_cost = abs(distance(objects[0].pos, objects[3].pos) - 200)
+    #pair_distance_cost = abs(objects[0].pos[1] - objects[3].pos[1] - 200) + abs(objects[0].pos[0] - objects[3].pos[0])
     #print("pair_distance_cost is ", pair_distance_cost)
 
     final_cost = visibility_cost + accessibility_cost + direction_cost + distance_cost + pair_direction_cost + pair_distance_cost
@@ -60,11 +61,22 @@ def update(objects, times):
     for i in range(times):
         temp.clear()
         last_cost = CostFunction(objects)
-        for _, obj in enumerate(objects):
+        for i, obj in enumerate(objects):
             temp.append((obj.pos, obj.dir))
-            obj.pos = (int(obj.pos[0] + random.uniform(-10, 10)), int(obj.pos[1] + random.uniform(-10, 10)))
-            obj.dir = obj.dir + random.uniform(-1, 1)
+            prob = random.uniform(0,1)
+            if prob <= 0.4:
+                obj.pos = (int(obj.pos[0] + random.uniform(-10, 10)), int(obj.pos[1] + random.uniform(-10, 10)))
+            elif prob <= 0.8:
+                obj.dir = obj.dir + random.uniform(-1, 1)
+            else:
+                obj.pos = (int(obj.pos[0] + random.uniform(-10, 10)), int(obj.pos[1] + random.uniform(-10, 10)))
+                obj.dir = obj.dir + random.uniform(-1, 1)
+            obj.calPos()
+            if obj.isOut():
+                obj.pos = temp[i][0]
+                obj.dir = temp[i][1]
         current_cost = CostFunction(objects)
+        
         print("result is ", last_cost, current_cost)
         if current_cost < last_cost:
             print("good next one")
@@ -79,3 +91,55 @@ def update(objects, times):
     
         #print(temp)
         # randomly change a little bit
+
+
+def updateWithSA(objects, times):
+    temp = []
+    for time in range(times):
+        temper = float(times) /10 / float(time+1)
+        degeree = 0
+        if time < times / 3:
+            degeree = 1
+        elif time < times * 2/3:
+            degeree = 0.6
+        else:
+            degeree = 0.3
+        temp.clear()
+        last_cost = CostFunction(objects)
+        for i, obj in enumerate(objects):
+            temp.append((obj.pos, obj.dir))
+            prob = random.uniform(0,1)
+            if prob <= 0.4:
+                obj.pos = (int(obj.pos[0] + degeree * random.uniform(-10, 10)), int(obj.pos[1] + degeree * random.uniform(-10, 10)))
+            elif prob <= 0.8:
+                obj.dir = obj.dir + degeree * random.uniform(-1, 1)
+            else:
+                obj.pos = (int(obj.pos[0] + degeree * random.uniform(-10, 10)), int(obj.pos[1] + degeree * random.uniform(-10, 10)))
+                obj.dir = obj.dir + degeree * random.uniform(-1, 1)
+            obj.calPos()
+            if obj.isOut():
+                obj.pos = temp[i][0]
+                obj.dir = temp[i][1]
+        current_cost = CostFunction(objects)
+        print("result is ", last_cost, current_cost)
+        if current_cost < last_cost:
+            print("good next one")
+            continue
+        else:
+            print("bad one")
+            energy = current_cost - last_cost
+            try:
+                accept_prob = max(0, (1 - math.exp(energy / temper)))
+            except:
+                accept_prob = 0
+            
+            choice = random.uniform(0,1)
+            if choice <accept_prob:
+                print("prob is ", accept_prob, temper, energy)
+                print("but accept it")
+                continue
+            for i, obj in enumerate(objects):
+                obj.pos = temp[i][0]
+                obj.dir = temp[i][1]
+            #print("it be", CostFunction(objects), last_cost)
+            continue

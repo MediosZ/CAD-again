@@ -2,7 +2,7 @@ import cv2
 import numpy as np 
 from utils import *
 from object import Object
-from costfunc import CostFunction, update
+from costfunc import CostFunction, update, updateWithSA
 background = np.ones((520, 680, 3))
 
 objects = []
@@ -28,5 +28,5 @@ CostFunction(objects)
 #for obj in objects:
 #    print('the {} position is {}, direction is {}'.format(obj.name, obj.pos, obj.dir))
 
-update(objects, 1000)
+updateWithSA(objects, 2000)
 redraw(background, objects)
