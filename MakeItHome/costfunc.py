@@ -1,6 +1,7 @@
 from utils import distance, redraw
 import math
 import random
+from matplotlib import pyplot as plt
 
 # wo consider these things
 # accessibility, visibility, pairwise distance, pirewise direction, self location
@@ -8,8 +9,8 @@ import random
 # three plants, two chairs, one tv, and one sofa
 # one point is that the tv and the sofa is a pair of things, and the tv should just on the wall 
 
-
-
+cost = []
+x = []
 def CostFunction(objects):
     final_cost = 0
     visibility_cost = 0
@@ -106,6 +107,8 @@ def updateWithSA(objects, times, image):
             degeree = 0.3
         temp.clear()
         last_cost = CostFunction(objects)
+        x.append(time)
+        cost.append(last_cost)
         for i, obj in enumerate(objects):
             temp.append((obj.pos, obj.dir))
             prob = random.uniform(0,1)
@@ -146,3 +149,5 @@ def updateWithSA(objects, times, image):
             #print("it be", CostFunction(objects), last_cost)
             redraw(image, objects)
             continue
+    plt.plot(x, cost)
+    plt.show()
